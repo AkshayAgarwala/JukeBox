@@ -1,0 +1,66 @@
+body {
+  background-image: url("mic.jpg");
+  background-repeat: no-repeat;
+
+  /*background-size: 100% auto;*/
+  /*background-position: center;*/
+  background-size: 100% auto;
+
+}
+
+#currentlyPlaying {
+  color: lightgreen;
+  font-family: Arial;
+  font-size: 50px;
+  margin-left: 20px;
+}
+.button {
+  width: 65px;
+  height: 65px;
+  background-color: lightgray;
+  border-radius: 65px;
+  text-align: center;
+
+  /*margin: 10px;*/
+}
+
+.button:hover {
+  background-color: red;
+}
+
+/*#pauseButton {
+  width: 50px;
+  height: 50px;
+  background-color: blue;
+  border-radius: 50px;
+}
+
+#stopButton {
+  width: 50px;
+  height: 50px;
+  background-color: red;
+  border-radius: 50px;*/
+}
+/*.test {
+  width: 58px;
+  height: 58px;
+  background-color: lightgray;
+  border-radius: 58px;
+}*/
+i {
+  padding-left: 5px;
+}
+
+ul li {
+  margin: 10px;
+  font-family: Arial;
+  font-size: 20px;
+  display: inline;
+  color: orange;
+  text-decoration: none;
+}
+
+li:hover {
+  text-decoration: underline;
+  color: red;
+}
