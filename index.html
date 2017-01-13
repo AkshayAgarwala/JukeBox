@@ -31,17 +31,23 @@
   <i class="fa fa-stop-circle fa-4x"></i> -->
 
   <!-- <button onclick="document.getElementById('track1').play()">Play the Audio</button> -->
+  <!-- <div id = "audioTracks"> -->
   <audio src="audio-tracks/Roger.mp3" id = "track1"></audio>
-  <audio src="audio-tracks/Jupiter-Lightning.mp3" id = "track2"></audio>
-  <audio src="audio-tracks/Merry-Christmas.mp3" id = "track3"></audio>
-  <audio src="audio-tracks/E-Ticket.mp3" id = "track4"></audio>
+  <audio src="audio-tracks/Jupiter-Lightning.mp3" id = "track2"></audio>    <audio src="audio-tracks/Merry-Christmas.mp3" id = "track3"></audio>    <audio src="audio-tracks/E-Ticket.mp3" id = "track4"></audio>
+  <audio src="" id = "searchedTrack" controls></audio>
+  <!-- </div> -->
   <ul id = "tracklist">
-    <li>1</li>
-    <li>2</li>
-    <li>3</li>
-    <li>4</li>
+    <li id = "1">Roger</li>
+    <li id = "2">Jupiter-Lightning</li>
+    <li id = "3">Merry-Christmas</li>
+    <li id = "4">E-Ticket</li>
   </ul>
 
+  <form action="" id = "myForm">
+    <label for="Track Name">Track Name</label>
+    <input type="text" placeholder="Enter Track Name..." id = "searchText">
+    <input type="submit" value = "Search" id = "search">
+  </form>
 
 
 

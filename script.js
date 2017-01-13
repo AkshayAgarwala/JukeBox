@@ -3,7 +3,7 @@ var selectedTrack = 1; // default loaded track number
 var trackList = []; // array of songs
 
 // populate array of songs
-for (i = 0; i < $("audio").length; i++) {
+for (i = 0; i < $("audio").length - 1; i++) {
     trackList.push($("audio")[i]);
 }
 
@@ -41,10 +41,11 @@ function JukeBox(songList) {
   this.pause = function() {
     pauseCurrentSong(this.songList, this.currentSongNumber)
   }
-  this.stop = function() {
+  this.stop =  function() {
     stopCurrentSong(this.songList, this.currentSongNumber)
   }
   this.addSong = function(newSong) {
+    //$(newSong).attr("id","4");
     this.songList.push(newSong);
   }
   // this.next =
@@ -100,9 +101,40 @@ $("#stopButton").click(function(){
 //   document.getElementById("track" + selectedTrack).play();
 // })
 
-$("li").click(function() {
+
+
+$("#search").click(function(e){
+  e.preventDefault();
+  var userSelectedTrack = $("#searchText").val()
+  // $("#searchText").val("") to clear the text area
+  $("#tracklist").append("<li id = " + "5" + ">" + userSelectedTrack + "</li>");
+  $.ajax({
+    url: "https://api.spotify.com/v1/search",
+    data: {
+      q: userSelectedTrack,
+      type: "track",
+    },
+    success: function(response) {
+      var trackurl = response.tracks.items[0].preview_url;
+      $("#searchedTrack").attr("src", trackurl);
+      jukeBox.addSong($("#searchedTrack"));
+      console.log(response);
+      console.log(response.tracks.items[0].preview_url);
+    }
+  })
+})
+
+function refresh(){
+  $("li").click(function() {
+  alert("he");
   jukeBox.stop();
-  jukeBox.currentSongNumber = parseInt(this.innerText - 1);
+  // jukeBox.currentSongNumber = parseInt(this.innerText - 1);
+  jukeBox.currentSongNumber = parseInt($(this).attr("id")) - 1;
   // jukeBox.play(this.innerText);
   jukeBox.play();
+})}
+
+$(document).ready(function(){
+  $("#tracklist").append("<li id = " + "5" + ">" + "hello" + "</li>");
+  refresh();
 })
