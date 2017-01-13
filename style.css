@@ -58,7 +58,7 @@ ul li {
   display: inline;
   color: orange;
   text-decoration: none;
-  text-transform: capitalize;
+  /*text-transform: capitalize;*/
 }
 
 li:hover {

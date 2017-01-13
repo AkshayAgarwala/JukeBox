@@ -32,6 +32,7 @@ console.log(trackList);
 // Object
 function JukeBox(songList) {
   this.songList = songList;
+  this.numberOfSongs = songList.length;
   this.currentSongNumber = selectedTrack-1;
   this.currentSongName = currentSong(this.songList, this.currentSongNumber);
   this.play = function() {
@@ -44,10 +45,23 @@ function JukeBox(songList) {
   this.stop =  function() {
     stopCurrentSong(this.songList, this.currentSongNumber)
   }
-  this.addSong = function(newSong) {
+  this.addSong = function(newSong, newSongUrl) {
     //$(newSong).attr("id","4");
-    this.songList.push(newSong);
+    //this.songList.push(newSong);
+    var tempAudioElement = document.createElement("audio");
+    var tempText = document.createTextNode(newSong);
+    tempAudioElement.appendChild(tempText);
+
+    var myAtt = document.createAttribute("id");
+    myAtt.value = ("track" + (this.numberOfSongs+1));
+    tempAudioElement.setAttributeNode(myAtt);
+    $(tempAudioElement).attr("src", newSongUrl);
+
+    this.songList.push(tempAudioElement);
+    refresh();
   }
+
+
   // this.next =
 }
 
@@ -56,8 +70,9 @@ var jukeBox = new JukeBox(trackList);
 // JukeBox functions for Play, Pause, Stop
 function playCurrentSong(theSongList, theCurrentSongNumber) {
   // $("#currentlyPlaying").innerText = currentSong(theSongList, theCurrentSongNumber);
-  document.getElementById("currentlyPlaying").innerText = currentSong(theSongList, theCurrentSongNumber);
   theSongList[theCurrentSongNumber].play();
+  //document.getElementById("currentlyPlaying").innerText = currentSong(theSongList, theCurrentSongNumber);
+  //theSongList[theCurrentSongNumber].play();
 }
 
 function pauseCurrentSong(theSongList, theCurrentSongNumber) {
@@ -107,7 +122,8 @@ $("#search").click(function(e){
   e.preventDefault();
   var userSelectedTrack = $("#searchText").val()
   // $("#searchText").val("") to clear the text area
-  $("#tracklist").append("<li id = " + "5" + ">" + userSelectedTrack + "</li>");
+  $("#tracklist").append("<li id = " + (jukeBox.numberOfSongs + 1) + ">" + userSelectedTrack + "</li>");
+  //refresh();
   $.ajax({
     url: "https://api.spotify.com/v1/search",
     data: {
@@ -117,7 +133,8 @@ $("#search").click(function(e){
     success: function(response) {
       var trackurl = response.tracks.items[0].preview_url;
       $("#searchedTrack").attr("src", trackurl);
-      jukeBox.addSong($("#searchedTrack"));
+      //jukeBox.addSong($("#searchedTrack"));
+      jukeBox.addSong(userSelectedTrack, trackurl);
       console.log(response);
       console.log(response.tracks.items[0].preview_url);
     }
@@ -126,7 +143,7 @@ $("#search").click(function(e){
 
 function refresh(){
   $("li").click(function() {
-  alert("he");
+  console.log("Ping");
   jukeBox.stop();
   // jukeBox.currentSongNumber = parseInt(this.innerText - 1);
   jukeBox.currentSongNumber = parseInt($(this).attr("id")) - 1;
@@ -134,7 +151,8 @@ function refresh(){
   jukeBox.play();
 })}
 
-$(document).ready(function(){
-  $("#tracklist").append("<li id = " + "5" + ">" + "hello" + "</li>");
-  refresh();
-})
+ refresh();
+// $(document).ready(function(){
+//   $("#tracklist").append("<li id = " + "5" + ">" + "hello" + "</li>");
+//   refresh();
+// })
