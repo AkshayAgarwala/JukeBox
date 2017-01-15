@@ -1,78 +1,65 @@
-// NEED TO BE ABLE TO ADD TRACK???
+// Tracks are numbered 1+ and adjusted when indexing array
 var selectedTrack = 1; // default loaded track number
 var trackList = []; // array of songs
 
 // populate array of songs
-for (i = 0; i < $("audio").length - 1; i++) {
+for (i = 0; i < $("audio").length; i++) {
     trackList.push($("audio")[i]);
 }
 
-var currentSongName; // Name of song that is playing now
-
-// *** OUTDATED METHOD?? ***
-// Get name of mp3 file currently playing
-// function currentSong(trackNumber) {
-//     var temp = $("audio:eq(" + (trackNumber-1) + ")").attr("src");
-//     return temp.substr(13);
-// }
-
-// Get name of mp3 file currently playing
+// Get name of mp3 file that is currently playing
 function currentSong(trackList, trackNumber) {
-    var temp = trackList[trackNumber].src;
-    return temp.substr(temp.lastIndexOf("/") + 1);
+    return trackList[trackNumber].innerText;
 }
 
-function changeList() {
-
-}
-
+var currentSongName; // Name of song that is playing now
 currentSongName = currentSong(trackList, selectedTrack-1);
-console.log(trackList);
 
 // Object
 function JukeBox(songList) {
   this.songList = songList;
-  this.numberOfSongs = songList.length;
+  this.numberOfSongs = function() {
+    return songList.length;
+  }
+
   this.currentSongNumber = selectedTrack-1;
   this.currentSongName = currentSong(this.songList, this.currentSongNumber);
   this.play = function() {
     playCurrentSong(this.songList, this.currentSongNumber); // function call
-    //this.currentSongNumber = (this.currentSongNumber + 1) % this.songList.length; // change to next track
   }
+
   this.pause = function() {
-    pauseCurrentSong(this.songList, this.currentSongNumber)
+    pauseCurrentSong(this.songList, this.currentSongNumber);
   }
+
   this.stop =  function() {
-    stopCurrentSong(this.songList, this.currentSongNumber)
-  }
-  this.addSong = function(newSong, newSongUrl) {
-    //$(newSong).attr("id","4");
-    //this.songList.push(newSong);
-    var tempAudioElement = document.createElement("audio");
-    var tempText = document.createTextNode(newSong);
-    tempAudioElement.appendChild(tempText);
-
-    var myAtt = document.createAttribute("id");
-    myAtt.value = ("track" + (this.numberOfSongs+1));
-    tempAudioElement.setAttributeNode(myAtt);
-    $(tempAudioElement).attr("src", newSongUrl);
-
-    this.songList.push(tempAudioElement);
-    refresh();
+    stopCurrentSong(this.songList, this.currentSongNumber);
   }
 
+  this.addSong = function (newSong, newSongUrl) {
+    addSongToList(newSong, newSongUrl, this); // pass the object as a parameter
+  }
 
-  // this.next =
-}
+  this.previous = function() {
+    playPreviousSong(this);
+  }
+
+  this.next = function() {
+    playNextSong(this);
+  }
+
+  this.shuffle = function() {
+    shuffle(this);
+  }
+
+} // object
 
 var jukeBox = new JukeBox(trackList);
 
-// JukeBox functions for Play, Pause, Stop
+// JukeBox functions for Play/Pause/Stop, Previous/Next, Shuffle
 function playCurrentSong(theSongList, theCurrentSongNumber) {
-  // $("#currentlyPlaying").innerText = currentSong(theSongList, theCurrentSongNumber);
   theSongList[theCurrentSongNumber].play();
-  //document.getElementById("currentlyPlaying").innerText = currentSong(theSongList, theCurrentSongNumber);
-  //theSongList[theCurrentSongNumber].play();
+  document.getElementById("currentlyPlaying").innerText = "Now Playing: " + currentSong(theSongList, theCurrentSongNumber);
 }
 
 function pauseCurrentSong(theSongList, theCurrentSongNumber) {
@@ -84,45 +71,75 @@ function stopCurrentSong(theSongList, theCurrentSongNumber) {
   theSongList[theCurrentSongNumber].currentTime = 0;
 }
 
+function playPreviousSong(box) {
+  var num = box.numberOfSongs();
+  box.stop();
+  box.currentSongNumber = ((box.currentSongNumber - 1) % num);
+  if(box.currentSongNumber < 0) box.currentSongNumber = (num-1);
+  box.play();
+}
 
+function playNextSong(box) {
+  var num = box.numberOfSongs();
+  box.stop();
+  box.currentSongNumber = ((box.currentSongNumber + 1) % num);
+  box.play();
+}
 
-// $("#playButton").on({click: function(e){
-//   $("#playButton").on('click');
-//   jukeBox.play();
-//   $("#playButton").off('click');
-// }})
+function shuffle(box) {
+  box.stop();
+  box.currentSongNumber = Math.floor(Math.random() * box.numberOfSongs());
+  box.play();
+}
+
+function addSongToList(newSong, newSongUrl, box) {
+  // Create audio element with text that was searched for
+  var tempAudioElement = document.createElement("audio");
+  var tempText = document.createTextNode(newSong);
+  tempAudioElement.appendChild(tempText);
+  // Set id of audio element to next track number
+  var myAtt = document.createAttribute("id");
+  myAtt.value = ("track" + (box.numberOfSongs()+1));
+  tempAudioElement.setAttributeNode(myAtt);
+  // Change src of audio element to url of searched track
+  $(tempAudioElement).attr("src", newSongUrl);
+  // add new track to pre-existing track list
+  box.songList.push(tempAudioElement);
+  // refresh the event listeners on the list of tracks
+  refresh();
+}
 
 // Set Button Actions
 $("#playButton").click(function(){
   jukeBox.play();
-  //document.getElementById("track" + selectedTrack).play();
 })
 
 $("#pauseButton").click(function(){
   jukeBox.pause();
-  //document.getElementById("track" + selectedTrack).pause();
 })
 
 $("#stopButton").click(function(){
   jukeBox.stop();
-  //document.getElementById("track" + selectedTrack).pause();
-  //document.getElementById("track" + selectedTrack).currentTime = 0;
 })
 
-// Set Track Number Button Actions
-// $("li").click(function() {
-//   selectedTrack = parseInt(this.innerText);
-//   // jukeBox.play(this.innerText);
-//   document.getElementById("track" + selectedTrack).play();
-// })
+$("#previousButton").click(function(){
+  jukeBox.previous();
+})
 
+$("#nextButton").click(function(){
+  jukeBox.next();
+})
 
+$("#shuffleButton").click(function(){
+  jukeBox.shuffle();
+})
 
+// Search for new songs
 $("#search").click(function(e){
   e.preventDefault();
   var userSelectedTrack = $("#searchText").val()
-  // $("#searchText").val("") to clear the text area
-  $("#tracklist").append("<li id = " + (jukeBox.numberOfSongs + 1) + ">" + userSelectedTrack + "</li>");
+  $("#searchText").val(""); // Clear Search Text Area
+  $("#tracklist").append("<li id = " + (jukeBox.numberOfSongs() + 1) + ">" + userSelectedTrack + "</li>");
   //refresh();
   $.ajax({
     url: "https://api.spotify.com/v1/search",
@@ -131,28 +148,23 @@ $("#search").click(function(e){
       type: "track",
     },
     success: function(response) {
-      var trackurl = response.tracks.items[0].preview_url;
-      $("#searchedTrack").attr("src", trackurl);
-      //jukeBox.addSong($("#searchedTrack"));
-      jukeBox.addSong(userSelectedTrack, trackurl);
       console.log(response);
-      console.log(response.tracks.items[0].preview_url);
-    }
-  })
+      var trackurl = response.tracks.items[0].preview_url;
+      jukeBox.addSong(userSelectedTrack, trackurl);
+    } // success
+  }) // ajax
 })
 
+// refreshes the click event listener on all list items
 function refresh(){
   $("li").click(function() {
-  console.log("Ping");
-  jukeBox.stop();
-  // jukeBox.currentSongNumber = parseInt(this.innerText - 1);
-  jukeBox.currentSongNumber = parseInt($(this).attr("id")) - 1;
-  // jukeBox.play(this.innerText);
-  jukeBox.play();
-})}
+    jukeBox.stop();
+    jukeBox.currentSongNumber = parseInt($(this).attr("id")) - 1;
+    // play song after a short delay to avoid pause to play interrupts
+    setTimeout(function(){
+      jukeBox.play();
+    }, 150);
+  })
+}
 
- refresh();
-// $(document).ready(function(){
-//   $("#tracklist").append("<li id = " + "5" + ">" + "hello" + "</li>");
-//   refresh();
-// })
+ refresh(); // Set click event listener on pre-loaded tracks

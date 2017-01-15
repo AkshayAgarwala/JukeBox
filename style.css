@@ -1,64 +1,93 @@
 body {
-  background-image: url("mic.jpg");
-  background-repeat: no-repeat;
+  background: url("mic.jpg") no-repeat center center fixed;
+  background-size: cover;
+}
 
-  /*background-size: 100% auto;*/
-  /*background-position: center;*/
-  background-size: 100% auto;
+label {
+  font-weight: bold;
+  color: white;
+  margin-right: 3px;
+}
 
+form {
+  position: fixed;
+  left: 10px;
+  top: 20px;
+}
+
+#titleBar {
+  position: fixed;
+  bottom: 10px;
+  left: 0px;
+  right: 0px;
+  background-color: #C9C9C9;
+  opacity: 0.6;
+  width: auto;
+  text-align: center;
 }
 
 #currentlyPlaying {
-  color: lightgreen;
+  /*color: #0100FF;*/
+  color: red;
   font-family: Arial;
   font-size: 50px;
-  margin-left: 20px;
+  text-transform: capitalize;
+  margin: 0;
 }
-.button {
-  width: 65px;
-  height: 65px;
-  background-color: lightgray;
-  border-radius: 65px;
-  text-align: center;
 
-  /*margin: 10px;*/
+.button {
+  width: 80px;
+  height: 80px;
+  background-color: #A1A1A1;
+  border-radius: 80px;
+  text-align: center;
+  float: left;
 }
 
 .button:hover {
   background-color: red;
 }
 
-/*#pauseButton {
-  width: 50px;
-  height: 50px;
-  background-color: blue;
-  border-radius: 50px;
+#nextButtonI {
+  position: relative;
+  top: 8%;
+  left: 8%;
 }
 
-#stopButton {
-  width: 50px;
-  height: 50px;
-  background-color: red;
-  border-radius: 50px;*/
-}
-/*.test {
-  width: 58px;
-  height: 58px;
-  background-color: lightgray;
-  border-radius: 58px;
-}*/
-i {
-  padding-left: 5px;
+#prevButtonI {
+  position: relative;
+  top: 8%;
+  right: 8%;
 }
 
-ul li {
-  margin: 10px;
+#sButtonI {
+  position: relative;
+  top: 10%;
+}
+
+#allButtons {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 220%);
+}
+
+#songMenu {
+  display: inline;
+  float: right;
+}
+
+#tracklist {
+  list-style-type: none;
+}
+
+li {
+  text-decoration: none;
+  text-transform: capitalize;
   font-family: Arial;
   font-size: 20px;
-  display: inline;
-  color: orange;
-  text-decoration: none;
-  /*text-transform: capitalize;*/
+  color: white;
+  margin: 10px;
 }
 
 li:hover {
